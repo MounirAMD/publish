@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card | Shoes</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .card {
+            background-color: #EBEDF0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 1%;
+            box-shadow: 0px 2px 8px black;
+            flex: 1; /* Equal width for both cards */
+            max-width: calc(50% - 2%); /* Two cards in a row with margin */
+        }
+        h2 {
+            color: rgb(207, 73, 73);
+        }
+        h4 {
+            font-weight: bold;
+        }
+        img {
+            background-color: white;
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            box-shadow: 0px 2px 8px black;
+        }
+        label{
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+
+    <div class="container">
+        <div class="card">
+            <img src="shoes.jfif" alt="Running Shoes">
+            <div class="proprity">
+                <label>Running Shoes</label><br>
+                <label>5 Colors</label>
+                <h2>DT 250</h2>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="shoes2.jpg" alt="Running Shoes">
+            <div class="proprity">
+                <label>Running Shoes</label><br>
+                <label>5 Colors</label>
+                <h2>DT 250</h2>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
