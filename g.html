@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Data and Photo to Firebase</title>
+    <!-- Include Firebase JavaScript SDK from the CDN -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-storage-compat.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic&display=swap');
+      body{
+        font-family: 'IBM Plex Sans Arabic', sans-serif;
+      }
+      /* Style for the form container */
+#data-form {
+  width: 80%;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: right;
+  background-color: #f5f5f5;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for labels */
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Style for text inputs */
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Style for file input */
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Style for the submit button */
+button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+/* Style for the h1 header */
+h1 {
+  text-align: center;
+  font-size: 24px;
+  margin: 20px 0;
+  color: #007bff;
+}
+
+    </style>  
+</head>
+<body style="padding-top: 30px;" dir="rtl">
+
+<h1>الدرس</h1>
+
+<!-- Form to collect data and photo -->
+<form id="data-form">
+  <label for="bookName">اسم الدرس</label>
+  <input type="text" id="bookName" name="bookName" required><br><br>
+
+  <label for="photo">الصورة :</label>
+  <input type="file" id="photo" name="photo" accept="image/*" required><br><br>
+
+  <button type="submit">إرسال</button>
+</form>
+
+<!-- Firebase Configuration -->
+<script>
+  var firebaseConfig = {
+      apiKey: "AIzaSyCDjPux_JDDVgdEOqO3bO9bE5eIm6XFXqw",
+      authDomain: "bac-info-2024.firebaseapp.com",
+      projectId: "bac-info-2024",
+      storageBucket: "bac-info-2024.appspot.com",
+      messagingSenderId: "557334617374",
+      appId: "1:557334617374:web:9365eb01ba0774856cbd0f",
+      measurementId: "G-0FE0LDMQ9L"
+  };
+
+  // Initialize Firebase
+  var firebaseApp = firebase.initializeApp(firebaseConfig);
+
+  // Handle form submission
+  document.getElementById("data-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // Get input values
+    var bookName = document.getElementById("bookName").value;
+
+    var photoFile = document.getElementById("photo").files[0];
+
+    // Reference to your Firebase database
+    var database = firebase.database();
+    var dataRef = database.ref("HI"); // Replace "your_data_node" with your desired database node
+
+    // Create a new data entry
+    var newDataRef = dataRef.push();
+
+    // Upload the photo to Firebase Storage
+    var storage = firebase.storage();
+    var storageRef = storage.ref("photos/" + newDataRef.key + "/" + photoFile.name);
+    var uploadTask = storageRef.put(photoFile);
+
+    // Monitor the photo upload progress
+    uploadTask.on('state_changed',
+      function(snapshot) {
+        // You can track the upload progress here if needed
+      },
+      function(error) {
+        console.error('Error uploading photo:', error);
+      },
+      function() {
+        // Photo upload completed, get the download URL
+        uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          // Save the download URL and other data to the database
+          newDataRef.set({
+            bookName: bookName,
+
+            photoURL: downloadURL // Add the download URL to the database
+          });
+
+          // Clear the form
+          document.getElementById("data-form").reset();
+
+          alert("Data and Photo added to Firebase!");
+        });
+      }
+    );
+  });
+</script>
+
+</body>
+</html>
